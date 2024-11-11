@@ -79,15 +79,15 @@ const styles = StyleSheet.create({
   },
   image: {
     width: width - 90, // Full width of the reduced card
-    height: 180,
+    height: 100,
     borderRadius: 20,
   },
   background: {
     padding: 10,
-    paddingTop: 90,
+    paddingTop: 10,
     position: "absolute",
     width: width - 90,
-    height: 180,
+    height: 100,
     borderRadius: 20,
   },
   title: {

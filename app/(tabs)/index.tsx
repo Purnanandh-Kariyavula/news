@@ -1,19 +1,35 @@
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import BreakingNews from "@/components/BreakingNews";
+import Categories from "@/components/Categories";
+import { Ionicons } from "@expo/vector-icons";
+import NewsList from "@/components/NewsList";
 
 type Props = {};
 
 const Page = (props: Props) => {
   const [Breakingnews, setBreakingnews] = useState([]);
+  const [catNews, setCatNews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getBreakingNews();
   }, []);
+
+  const onCatChange = async (category: string) => {
+    try {
+      if (!category) category = "top";
+      const URL = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_NEWS_API}&country=in&language=en&image=1&removeduplicate=1&size=10&category=${category}`;
+      const response = await axios.get(URL);
+      if (response && response.data) {
+        setCatNews(response.data.results);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const getBreakingNews = async () => {
     try {
@@ -21,6 +37,7 @@ const Page = (props: Props) => {
       const response = await axios.get(URL);
       if (response && response.data) {
         setBreakingnews(response.data.results);
+        setCatNews(response.data.results);
         setIsLoading(false);
       }
     } catch (e) {
@@ -37,7 +54,11 @@ const Page = (props: Props) => {
       {isLoading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <BreakingNews newslist={Breakingnews} />
+        <>
+          <BreakingNews newslist={Breakingnews} />
+          <Categories onCatChange={onCatChange} />
+          <NewsList newslist={catNews} />
+        </>
       )}
     </SafeAreaView>
   );
