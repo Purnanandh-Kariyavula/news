@@ -1,13 +1,8 @@
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { NewsDataType } from "@/types";
+import { Colors } from "@/constants/Colors";
+import { Link } from "expo-router";
 
 type Props = {
   newslist: NewsDataType[];
@@ -15,23 +10,32 @@ type Props = {
 
 const NewsList = ({ newslist }: Props) => {
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       {newslist.map((news, index) => (
-        <TouchableOpacity key={index} style={styles.newscard}>
-          <View style={styles.textContainer}>
-            <Text style={styles.newstitle} numberOfLines={2}>
-              {news.title}
-            </Text>
-            <Text style={styles.newsdesc} numberOfLines={1}>
-              {news.description}
-            </Text>
-          </View>
-          <View style={styles.imageContainer}>
-            <Image source={{ uri: news.image_url }} style={styles.image} />
-          </View>
-        </TouchableOpacity>
+        <Link key={index} href={`/news/${news.article_id}`} asChild>
+          <TouchableOpacity key={index} style={styles.newscard}>
+            <View style={styles.textContainer}>
+              <Text style={styles.newstitle} numberOfLines={2}>
+                {news.title}
+              </Text>
+              <Text style={styles.newsdesc} numberOfLines={1}>
+                {news.description}
+              </Text>
+              <View style={styles.sources}>
+                <Image
+                  source={{ uri: news.source_icon }}
+                  style={styles.sicon}
+                />
+                <Text style={styles.newsdesc}>{news.source_name}</Text>
+              </View>
+            </View>
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: news.image_url }} style={styles.image} />
+            </View>
+          </TouchableOpacity>
+        </Link>
       ))}
-    </ScrollView>
+    </View>
   );
 };
 
@@ -51,16 +55,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   textContainer: {
-    flex: 3,
-    paddingRight: 30,
+    flex: 2,
+    paddingRight: 10,
   },
   imageContainer: {
     flex: 1,
     justifyContent: "center",
   },
   image: {
-    width: 60,
-    height: 60,
+    width: 100,
+    height: 100,
     borderRadius: 10,
   },
   newstitle: {
@@ -69,6 +73,19 @@ const styles = StyleSheet.create({
   },
   newsdesc: {
     fontSize: 12,
-    color: "#333",
+    color: Colors.lightGrey,
+  },
+  sicon: {
+    width: 25,
+    height: 25,
+    borderWidth: 1,
+    borderColor: Colors.lightGrey,
+    borderRadius: 20,
+    marginRight: 8,
+  },
+  sources: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
   },
 });
