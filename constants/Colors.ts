@@ -9,5 +9,5 @@ export const Colors = {
   lightGrey: '#999',
   softText: '#555',
   primary: 'blue',
-  blue:'#007aff'
+  blue:'#1F41BB'
 };
