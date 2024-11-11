@@ -9,9 +9,11 @@ import React, { useRef, useState } from "react";
 import newsCategoryList from "@/constants/Categories";
 import { Colors } from "@/constants/Colors";
 
-type Props = {};
+type Props = {
+  onCatChange: (category: string) => void;
+};
 
-const Categories = (props: Props) => {
+const Categories = ({ onCatChange }: Props) => {
   const scrollref = useRef<ScrollView>(null);
   const itemref = useRef<TouchableOpacity[] | null[]>([]);
   const [selectedCategory, setSelectedCategory] = useState(0);
@@ -20,8 +22,9 @@ const Categories = (props: Props) => {
     const selected = itemref.current[index];
     setSelectedCategory(index);
     selected?.measure((x) => {
-      scrollref.current?.scrollTo({ x: x, y: 0, animated: true });
+      scrollref.current?.scrollTo({ x: x - 20, y: 0, animated: true });
     });
+    onCatChange(newsCategoryList[index].slug);
   };
 
   return (
@@ -33,18 +36,26 @@ const Categories = (props: Props) => {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.itemwrapper}
       >
-        {newsCategoryList.map((category, index) => {
-          return (
-            <TouchableOpacity
-              ref={(el) => (itemref.current[index] = el)}
-              key={index}
-              style={styles.items}
-              onPress={() => handleCategorySelection(index)}
+        {newsCategoryList.map((category, index) => (
+          <TouchableOpacity
+            ref={(el) => (itemref.current[index] = el)}
+            key={index}
+            style={[
+              styles.items,
+              selectedCategory === index && styles.selectedItem,
+            ]}
+            onPress={() => handleCategorySelection(index)}
+          >
+            <Text
+              style={[
+                styles.itemtext,
+                selectedCategory === index && styles.selitemtext,
+              ]}
             >
-              <Text style={styles.itemtext}>{category.title}</Text>
-            </TouchableOpacity>
-          );
-        })}
+              {category.title}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     </View>
   );
@@ -60,17 +71,24 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
   },
   itemwrapper: {
-    gap: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    marginBottom: 10,
+    paddingHorizontal: 10,
+    alignItems: "center",
   },
   items: {
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    marginHorizontal: 10,
+    backgroundColor: "#ddd",
     borderWidth: 1,
     borderColor: Colors.darkGrey,
     borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
+  },
+  selectedItem: {
+    backgroundColor: Colors.blue, // Highlight color for selected item
+  },
+  selitemtext: {
+    fontSize: 14,
+    color: Colors.white,
   },
   itemtext: {
     fontSize: 14,

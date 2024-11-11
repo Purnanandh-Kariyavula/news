@@ -1,8 +1,8 @@
 const newsCategoryList = [
   {
     id: 1,
-    title: 'All',
-    slug: '',
+    title: 'For You',
+    slug: 'top',
     selected: false,
   },
   {
