@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Client, Account } from 'appwrite';
 import { router, useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
+import { StatusBar } from 'expo-status-bar';
 
 const client = new Client().setProject('67322c5c002c10ce2e0e');
 const account = new Account(client);
@@ -33,6 +34,7 @@ const Login: React.FC = () => {
 
     return (
         <View style={styles.container}>
+            <StatusBar style="dark" />
             <Text style={styles.title}>Login here</Text>
             <TextInput
                 style={[styles.input, focusedInput === 'email' && styles.inputFocused]}

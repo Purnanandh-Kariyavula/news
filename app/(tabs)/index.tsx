@@ -12,6 +12,7 @@ import BreakingNews from "@/components/BreakingNews";
 import Categories from "@/components/Categories";
 import { Ionicons } from "@expo/vector-icons";
 import NewsList from "@/components/NewsList";
+import { StatusBar } from "expo-status-bar";
 
 type Props = {};
 
@@ -53,6 +54,7 @@ const Page = (props: Props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
       <View style={styles.header}>
         <Text style={styles.title}>Home</Text>
         <Ionicons name="notifications-outline" size={24} color="black" />

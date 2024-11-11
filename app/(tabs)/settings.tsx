@@ -6,6 +6,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { Colors } from '@/constants/Colors'
 import { Account, Client } from 'appwrite';
 import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar'
 
 type Props = {}
 
@@ -27,6 +28,7 @@ const Page = (props: Props) => {
 
   return (
     <>
+    <StatusBar style="dark" />
       <Stack.Screen options={{ headerShown: false }}/>
       <View style={[styles.container, { paddingTop: safeTop + 20 }]}>
 
