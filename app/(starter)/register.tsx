@@ -27,7 +27,7 @@ const Register: React.FC = () => {
     };
 
     const navigateToLogin = () => {
-        router.push('/(starter)');
+        router.replace('/(starter)');
     };
 
     return (
