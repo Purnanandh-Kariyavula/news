@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; // To handle navigation
+import { useNavigation } from '@react-navigation/native';
 import { Client, Account } from 'appwrite';
 import { router, useRouter } from 'expo-router';
 

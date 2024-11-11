@@ -1,7 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router, useRouter } from "expo-router";
-import { useAuth } from "@clerk/clerk-expo";
 import { Account, Client } from "appwrite";
 
 const Page = () => {
