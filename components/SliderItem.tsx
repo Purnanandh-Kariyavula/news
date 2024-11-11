@@ -1,4 +1,11 @@
-import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import { NewsDataType } from "@/types";
 import Animated, {
@@ -8,6 +15,7 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
+import { Link } from "expo-router";
 
 type Props = {
   slideItem: NewsDataType;
@@ -51,19 +59,26 @@ const SliderItem = ({ slideItem, index, scrollX }: Props) => {
       style={[styles.itemwrap, rnStyle]}
       key={slideItem.article_id}
     >
-      <Image source={{ uri: slideItem.image_url }} style={styles.image} />
-      <LinearGradient
-        colors={["transparent", "rgba(0,0,0,0.8)"]}
-        style={styles.background}
-      >
-        <View style={styles.sources}>
-          <Image source={{ uri: slideItem.source_icon }} style={styles.sicon} />
-          <Text style={styles.sname}>{slideItem.source_name}</Text>
-        </View>
-        <Text style={styles.title} numberOfLines={2}>
-          {slideItem.title}
-        </Text>
-      </LinearGradient>
+      <Link href={`/news/${slideItem.article_id}`} asChild>
+        <TouchableOpacity>
+          <Image source={{ uri: slideItem.image_url }} style={styles.image} />
+          <LinearGradient
+            colors={["transparent", "rgba(0,0,0,0.8)"]}
+            style={styles.background}
+          >
+            <View style={styles.sources}>
+              <Image
+                source={{ uri: slideItem.source_icon }}
+                style={styles.sicon}
+              />
+              <Text style={styles.sname}>{slideItem.source_name}</Text>
+            </View>
+            <Text style={styles.title} numberOfLines={2}>
+              {slideItem.title}
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </Link>
     </Animated.View>
   );
 };
@@ -79,15 +94,15 @@ const styles = StyleSheet.create({
   },
   image: {
     width: width - 90, // Full width of the reduced card
-    height: 100,
+    height: 160,
     borderRadius: 20,
   },
   background: {
     padding: 10,
-    paddingTop: 10,
+    paddingTop: 70,
     position: "absolute",
     width: width - 90,
-    height: 100,
+    height: 160,
     borderRadius: 20,
   },
   title: {

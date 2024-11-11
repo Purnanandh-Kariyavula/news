@@ -1,4 +1,10 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
@@ -51,15 +57,17 @@ const Page = (props: Props) => {
         <Text style={styles.title}>Home</Text>
         <Ionicons name="notifications-outline" size={24} color="black" />
       </View>
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
-      ) : (
-        <>
-          <BreakingNews newslist={Breakingnews} />
-          <Categories onCatChange={onCatChange} />
-          <NewsList newslist={catNews} />
-        </>
-      )}
+      <ScrollView>
+        {isLoading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <>
+            <BreakingNews newslist={Breakingnews} />
+            <Categories onCatChange={onCatChange} />
+            <NewsList newslist={catNews} />
+          </>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 };
