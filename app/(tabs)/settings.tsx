@@ -1,4 +1,3 @@
-// Import necessary libraries and components
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
 import React from 'react'
 import { Stack } from 'expo-router'
@@ -15,11 +14,6 @@ const Page = (props: Props) => {
   const client = new Client().setProject('67322c5c002c10ce2e0e');
   const account = new Account(client);
   const router = useRouter();
-
-  // Function to handle navigation to the About page
-  const navigateToAbout = () => {
-    router.push('/about'); // Navigates to the about.tsx page
-  };
 
   const handleSignOut = async () => {
     try {
@@ -52,7 +46,7 @@ const Page = (props: Props) => {
 
         {/* Settings Options */}
         <View style={styles.optionsContainer}>
-          <TouchableOpacity style={styles.itemBtm} onPress={navigateToAbout}>
+          <TouchableOpacity style={styles.itemBtm}>
             <Text style={styles.itemBtmTxt}>About</Text>
             <MaterialIcons name='arrow-forward-ios' size={16} color={Colors.lightGrey} />
           </TouchableOpacity>
