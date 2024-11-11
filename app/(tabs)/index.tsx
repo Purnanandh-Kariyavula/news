@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import BreakingNews from "@/components/BreakingNews";
+import Categories from "@/components/Categories";
 
 type Props = {};
 
@@ -37,7 +38,10 @@ const Page = (props: Props) => {
       {isLoading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
-        <BreakingNews newslist={Breakingnews} />
+        <>
+          <BreakingNews newslist={Breakingnews} />
+          <Categories />
+        </>
       )}
     </SafeAreaView>
   );
