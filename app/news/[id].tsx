@@ -8,6 +8,7 @@ import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 type Props = {};
 
@@ -85,6 +86,11 @@ const NewsDetails = (props: Props) => {
         }}
       />
       <SafeAreaView>
+        
+        <StatusBar style="dark" />
+        <View style={styles.header}>
+          <Text style={styles.ntitle}>Read News</Text>
+        </View>
         <ScrollView contentContainerStyle={styles.container}>
           <Image source={{ uri: news.image_url }} style={styles.image} />
           <View style={styles.contentContainer}>
@@ -212,5 +218,15 @@ const styles = StyleSheet.create({
   },
   iconText: {
     fontSize: 20,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 16,
+    alignItems: "center",
+  },
+  ntitle: {
+    fontSize: 24,
+    fontWeight: "900",
   },
 });
