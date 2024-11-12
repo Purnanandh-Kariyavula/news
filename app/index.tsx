@@ -22,7 +22,6 @@ const Page = () => {
     };
     checkAuthStatus();
   }, []);
-
   useEffect(() => {
     if (isAuthenticated === true) {
       router.replace("/(tabs)");
@@ -55,7 +54,30 @@ const Page = () => {
       </View>
     );
   }
-  
+  const handlePress = () => {
+    router.replace(isAuthenticated ? "/(tabs)" : "/(starter)");
+  };
+
+  return (
+    <View style={styles.container}>
+      <StatusBar style="dark" />
+      <Image
+        source={require("../assets/images/landing-icon.png")}
+        style={styles.image}
+      />
+      <Text style={styles.title}>
+        Read News like a pro{"\n"}
+        <Text style={styles.highlight}>on the go</Text>
+      </Text>
+      <Text style={styles.subtitle}>
+        Get the knowledge and insight you need to be a better you—anytime,
+        anywhere.
+      </Text>
+      <TouchableOpacity style={styles.button} onPress={handlePress}>
+        <Text style={styles.buttonText}>Get Started</Text>
+      </TouchableOpacity>
+    </View>
+  );
 };
 
 export default Page;
@@ -67,6 +89,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#f0f4f8",
     padding: 16,
+    paddingHorizontal:20
   },
   image: {
     width: 300, // Adjust width as needed
@@ -91,6 +114,7 @@ const styles = StyleSheet.create({
     color: Colors.lightGrey,
     textAlign: "left",
     marginBottom: 30,
+    paddingHorizontal: 20
   },
   button: {
     width: "100%",
