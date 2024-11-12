@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     backgroundColor: "#ddd",
     borderWidth: 1,
-    borderColor: Colors.darkGrey,
+    borderColor: '#ddd',
     borderRadius: 10,
   },
   selectedItem: {
