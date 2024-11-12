@@ -35,7 +35,7 @@ const Page = () => {
         style={styles.image}
       />
       <Text style={styles.title}>
-        Invest in your personal growth{" "}
+        Read News like a pro{"\n"}
         <Text style={styles.highlight}>on the go</Text>
       </Text>
       <Text style={styles.subtitle}>
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f0f4f8",
-    padding: 16,
+    paddingHorizontal:20
   },
   image: {
     width: 300, // Adjust width as needed
@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
     color: Colors.lightGrey,
     textAlign: "left",
     marginBottom: 30,
+    paddingHorizontal: 20
   },
   button: {
     width: "100%",
