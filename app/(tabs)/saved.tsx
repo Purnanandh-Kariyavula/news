@@ -3,9 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { Link, Stack } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { FlatList } from 'react-native';
+import { ScrollView,Image } from 'react-native';
 import { NewsDataType } from '@/types'; // Adjust according to your project structure
-import NewsItem from '@/components/NewsItem'; // Adjust if NewsItem is a separate component
+import { Colors } from "@/constants/Colors";
 
 type Props = {};
 
@@ -43,18 +43,35 @@ const Page = (props: Props) => {
         {isLoading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : (
-          <FlatList
-            data={bookmarkNews}
-            keyExtractor={(_, index) => `list_items${index}`}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ index, item }) => (
-              <Link href={`/news/${item.article_id}`} asChild key={index}>
-                <TouchableOpacity>
-                  <NewsItem item={item} />
-                </TouchableOpacity>
-              </Link>
-            )}
-          />
+          <ScrollView>
+              {bookmarkNews.map((item, index) => (
+                <Link href={`/news/${item.article_id}`} asChild key={index}>
+                  <TouchableOpacity style={styles.newscard}>
+                    <View style={styles.textContainer}>
+                      <Text style={styles.newstitle} numberOfLines={2}>
+                        {item.title}
+                      </Text>
+                      <Text style={styles.newsdesc} numberOfLines={1}>
+                        {item.description}
+                      </Text>
+                      <View style={styles.sources}>
+                        <Image
+                          source={{ uri: item.source_icon }}
+                          style={styles.sicon}
+                        />
+                        <Text style={styles.newsdesc}>{item.source_name}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.imageContainer}>
+                      <Image
+                        source={{ uri: item.image_url }}
+                        style={styles.image}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </Link>
+              ))}
+            </ScrollView>
         )}
       </View>
     </>
@@ -67,5 +84,47 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     margin: 20,
+  },
+  newscard: {
+    flexDirection: "row",
+    backgroundColor: "#fff",
+    padding: 12,
+    marginVertical: 10,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  textContainer: {
+    flex: 2,
+    paddingRight: 10,
+  },
+  imageContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+  },
+  newstitle: {
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  newsdesc: {
+    fontSize: 12,
+    color: Colors.lightGrey,
+  },
+  sicon: {
+    width: 25,
+    height: 25,
+    borderWidth: 1,
+    borderColor: Colors.lightGrey,
+    borderRadius: 20,
+    marginRight: 8,
+  },
+  sources: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
   },
 });
