@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Link, Stack } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { ScrollView,Image } from 'react-native';
+import { ScrollView,Image,DeviceEventEmitter } from 'react-native';
 import { NewsDataType } from '@/types'; // Adjust according to your project structure
 import { Colors } from "@/constants/Colors";
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 
 type Props = {};
 
@@ -13,15 +15,18 @@ const Page = (props: Props) => {
   const [bookmarkNews, setBookmarkNews] = useState<NewsDataType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  
   useEffect(() => {
-    fetchBookmark();
+    const updateListener = DeviceEventEmitter.addListener("bookmarkUpdated", fetchBookmark);
+    return () => {
+      updateListener.remove();
+    };
   }, []);
-
   const fetchBookmark = async () => {
-    const token = await AsyncStorage.getItem("bookmarkNews");
-    const res = token ? JSON.parse(token) : null;
-
-    if (res) {
+    const token = await AsyncStorage.getItem("bookmark"); // Use consistent key "bookmark"
+    const res = token ? JSON.parse(token) : [];
+  
+    if (res.length > 0) {
       const queryString = res.join(',');
       try {
         const response = await axios.get(`https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_NEWS_API}&id=${queryString}`);
@@ -35,47 +40,48 @@ const Page = (props: Props) => {
     }
     setIsLoading(false);
   };
+  
 
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <View style={styles.container}>
+      <StatusBar style="dark" />
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.ntitle}>Saved News</Text>
+        </View>
         {isLoading ? (
           <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
+        ) : bookmarkNews.length > 0 ? (
           <ScrollView>
-              {bookmarkNews.map((item, index) => (
-                <Link href={`/news/${item.article_id}`} asChild key={index}>
-                  <TouchableOpacity style={styles.newscard}>
-                    <View style={styles.textContainer}>
-                      <Text style={styles.newstitle} numberOfLines={2}>
-                        {item.title}
-                      </Text>
-                      <Text style={styles.newsdesc} numberOfLines={1}>
-                        {item.description}
-                      </Text>
-                      <View style={styles.sources}>
-                        <Image
-                          source={{ uri: item.source_icon }}
-                          style={styles.sicon}
-                        />
-                        <Text style={styles.newsdesc}>{item.source_name}</Text>
-                      </View>
+            {bookmarkNews.map((item, index) => (
+              <Link href={`/news/${item.article_id}`} asChild key={index}>
+                <TouchableOpacity style={styles.newscard}>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.newstitle} numberOfLines={2}>
+                      {item.title}
+                    </Text>
+                    <Text style={styles.newsdesc} numberOfLines={1}>
+                      {item.description}
+                    </Text>
+                    <View style={styles.sources}>
+                      <Image source={{ uri: item.source_icon }} style={styles.sicon} />
+                      <Text style={styles.newsdesc}>{item.source_name}</Text>
                     </View>
-                    <View style={styles.imageContainer}>
-                      <Image
-                        source={{ uri: item.image_url }}
-                        style={styles.image}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                </Link>
-              ))}
-            </ScrollView>
+                  </View>
+                  <View style={styles.imageContainer}>
+                    <Image source={{ uri: item.image_url }} style={styles.image} />
+                  </View>
+                </TouchableOpacity>
+              </Link>
+            ))}
+          </ScrollView>
+        ) : (
+          <Text>No bookmarks available.</Text> // Placeholder when no bookmarks
         )}
-      </View>
+      </SafeAreaView>
     </>
-  );
+  );  
 };
 
 export default Page;
@@ -126,5 +132,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 10,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 16,
+    alignItems: "center",
+  },
+  ntitle: {
+    fontSize: 24,
+    fontWeight: "900",
   },
 });

@@ -3,12 +3,14 @@ import React, { useState, useEffect } from "react";
 import { Stack, useLocalSearchParams } from "expo-router";
 import axios from "axios";
 import { NewsDataType } from "@/types";
-import { Linking, TouchableOpacity } from "react-native";
+import { Linking, TouchableOpacity,DeviceEventEmitter } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+
+
 
 type Props = {};
 
@@ -17,6 +19,7 @@ const NewsDetails = (props: Props) => {
   const [news, setNews] = useState<NewsDataType | null>(null);
   const { id } = useLocalSearchParams<{ id: string }>();
   const [bookmarkNews, setBookmarkNews] = useState(false);
+  const [likedNews, setLikedNews] = useState(false); // State for like status
 
   useEffect(() => {
     const getNews = async () => {
@@ -24,7 +27,7 @@ const NewsDetails = (props: Props) => {
         const URL = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_NEWS_API}&id=${id}`;
         const response = await axios.get(URL);
         if (response && response.data) {
-          setNews(response.data.results[0]); // Assuming the response has the news object at the first index
+          setNews(response.data.results[0]);
           setIsLoading(false);
         }
       } catch (e) {
@@ -37,6 +40,7 @@ const NewsDetails = (props: Props) => {
   useEffect(() => {
     if (!isLoading && news) {
       renderBookMark(news.article_id);
+      renderLike(news.article_id); // Check like status on load
     }
   }, [isLoading, news]);
 
@@ -55,11 +59,11 @@ const NewsDetails = (props: Props) => {
       if (res && !res.includes(newsId)) {
         res.push(newsId);
         await AsyncStorage.setItem("bookmark", JSON.stringify(res));
-        alert("Saved to bookmark");
+        DeviceEventEmitter.emit("bookmarkUpdated"); // Emit event on adding bookmark
       }
     });
   };
-
+  
   const removeBookmark = async (newsId: string) => {
     setBookmarkNews(false);
     const bookmark = await AsyncStorage.getItem("bookmark").then((token: string | null) => {
@@ -67,13 +71,44 @@ const NewsDetails = (props: Props) => {
       return res.filter((id: string) => id !== newsId);
     });
     await AsyncStorage.setItem("bookmark", JSON.stringify(bookmark));
-    alert("Removed from bookmark");
+    DeviceEventEmitter.emit("bookmarkUpdated"); // Emit event on removing bookmark
   };
+  
 
   const renderBookMark = async (newsId: string) => {
     const bookmark = await AsyncStorage.getItem("bookmark").then((token: string | null) => {
       const res = token ? JSON.parse(token) : [];
       setBookmarkNews(res.includes(newsId));
+    });
+  };
+
+  // Save Like
+  const saveLike = async (newsId: string) => {
+    setLikedNews(true);
+    await AsyncStorage.getItem("likes").then(async (token: string | null) => {
+      const res = token ? JSON.parse(token) : [];
+      if (res && !res.includes(newsId)) {
+        res.push(newsId);
+        await AsyncStorage.setItem("likes", JSON.stringify(res));
+      }
+    });
+  };
+
+  // Remove Like
+  const removeLike = async (newsId: string) => {
+    setLikedNews(false);
+    const likes = await AsyncStorage.getItem("likes").then((token: string | null) => {
+      const res = token ? JSON.parse(token) : [];
+      return res.filter((id: string) => id !== newsId);
+    });
+    await AsyncStorage.setItem("likes", JSON.stringify(likes));
+  };
+
+  // Render Like Status
+  const renderLike = async (newsId: string) => {
+    const likes = await AsyncStorage.getItem("likes").then((token: string | null) => {
+      const res = token ? JSON.parse(token) : [];
+      setLikedNews(res.includes(newsId));
     });
   };
 
@@ -131,17 +166,17 @@ const NewsDetails = (props: Props) => {
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() =>
-                    bookmarkNews
-                      ? removeBookmark(news.article_id)
-                      : saveBookmark(news.article_id)
-                  }
+                  onPress={() => {
+                    likedNews
+                      ? removeLike(news.article_id)
+                      : saveLike(news.article_id);
+                  }}
                   style={[styles.iconButton, styles.likeButton]}
                 >
                   <Ionicons
-                    name={bookmarkNews ? "heart" : "heart-outline"}
+                    name={likedNews ? "heart" : "heart-outline"}
                     size={24}
-                    color={bookmarkNews ? Colors.tint : Colors.blue}
+                    color={likedNews ? Colors.tint : Colors.blue}
                   />
                 </TouchableOpacity>
               </View>
@@ -151,10 +186,10 @@ const NewsDetails = (props: Props) => {
       </SafeAreaView>
     </>
   );
-  
 };
 
 export default NewsDetails;
+
 
 const styles = StyleSheet.create({
   container: {
