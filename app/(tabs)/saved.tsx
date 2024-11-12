@@ -22,6 +22,9 @@ const Page = (props: Props) => {
       updateListener.remove();
     };
   }, []);
+  useEffect(()=>{
+    fetchBookmark();
+  },[]);
   const fetchBookmark = async () => {
     const token = await AsyncStorage.getItem("bookmark"); // Use consistent key "bookmark"
     const res = token ? JSON.parse(token) : [];

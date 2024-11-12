@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator
 } from "react-native";
 import React, { useEffect } from "react";
 import { Link, Stack, useLocalSearchParams } from "expo-router";
@@ -60,55 +61,58 @@ const search = () => {
         }}
       />
       <StatusBar style="dark" />
-      <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <Text
-            style={{
-              fontSize: 24,
-              fontWeight: "900",
-            }}
-          >
-            Search Results
-          </Text>
-        </View>
-        <View>
-          {isLoading ? (
-            <Text>Loading...</Text>
-          ) : (
-            <ScrollView>
-              {news.map((item, index) => (
-                <Link href={`/news/${item.article_id}`} asChild key={index}>
-                  <TouchableOpacity style={styles.newscard}>
-                    <View style={styles.textContainer}>
-                      <Text style={styles.newstitle} numberOfLines={2}>
-                        {item.title}
-                      </Text>
-                      <Text style={styles.newsdesc} numberOfLines={1}>
-                        {item.description}
-                      </Text>
-                      <View style={styles.sources}>
-                        <Image
-                          source={{ uri: item.source_icon }}
-                          style={styles.sicon}
-                        />
-                        <Text style={styles.newsdesc}>{item.source_name}</Text>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.header}>
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: "900",
+              }}
+            >
+              Search Results
+            </Text>
+          </View>
+          <View>
+            {isLoading ? (
+              <ActivityIndicator size="large" color="#0000ff" />
+            ) : (
+              <View style={{ paddingHorizontal: 16 }}>
+                {news.map((item, index) => (
+                  <Link href={`/news/${item.article_id}`} asChild key={index}>
+                    <TouchableOpacity style={styles.newscard}>
+                      <View style={styles.textContainer}>
+                        <Text style={styles.newstitle} numberOfLines={2}>
+                          {item.title}
+                        </Text>
+                        <Text style={styles.newsdesc} numberOfLines={1}>
+                          {item.description}
+                        </Text>
+                        <View style={styles.sources}>
+                          <Image
+                            source={{ uri: item.source_icon }}
+                            style={styles.sicon}
+                          />
+                          <Text style={styles.newsdesc}>{item.source_name}</Text>
+                        </View>
                       </View>
-                    </View>
-                    <View style={styles.imageContainer}>
-                      <Image
-                        source={{ uri: item.image_url }}
-                        style={styles.image}
-                      />
-                    </View>
-                  </TouchableOpacity>
-                </Link>
-              ))}
-            </ScrollView>
-          )}
-        </View>
-      </SafeAreaView>
+                      <View style={styles.imageContainer}>
+                        <Image
+                          source={{ uri: item.image_url }}
+                          style={styles.image}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  </Link>
+                ))}
+              </View>
+            )}
+          </View>
+        </SafeAreaView>
+      </ScrollView>
     </>
   );
+  
 };
 
 export default search;
