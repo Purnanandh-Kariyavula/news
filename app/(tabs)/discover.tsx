@@ -11,6 +11,7 @@ import useNewsCategories from "@/hooks/useNewsCategories";
 import useNewsCountries from "@/hooks/useNewsContries";
 import { useState } from "react";
 import { Link } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 
 type Props = {};
 
@@ -24,6 +25,7 @@ const Page = (props: Props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
       <View style={styles.header}>
         <Text
           style={{

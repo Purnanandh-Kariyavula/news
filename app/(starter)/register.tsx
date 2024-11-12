@@ -3,6 +3,7 @@ import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-nativ
 import { Client, Account, ID } from 'appwrite';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
+import { StatusBar } from 'expo-status-bar';
 
 const client = new Client().setProject('67322c5c002c10ce2e0e');
 const account = new Account(client);
@@ -32,6 +33,7 @@ const Register: React.FC = () => {
 
     return (
         <View style={styles.container}>
+            <StatusBar style="dark" />
             <Text style={styles.title}>Create Account</Text>
             <TextInput
                 style={[styles.input, focusedInput === 'name' && styles.inputFocused]}

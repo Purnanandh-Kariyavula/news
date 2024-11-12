@@ -46,13 +46,13 @@ const TabBarButton = ({
       style={styles.tabbarBtn}
     >
       {icon[routeName]({
-        color: isFocused ? Colors.tabIconSelected : Colors.tabIconDefault,
+        color: isFocused ? Colors.blue : Colors.tabIconDefault,
         focused: isFocused,
       })}
       <Animated.Text
         style={[
           {
-            color: isFocused ? Colors.tabIconSelected : Colors.tabIconDefault,
+            color: isFocused ? Colors.blue : Colors.tabIconDefault,
             fontSize: 12,
           },
           animatedTextStyle,

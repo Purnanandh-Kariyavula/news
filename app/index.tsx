@@ -2,6 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { router, useRouter } from "expo-router";
 import { Account, Client } from "appwrite";
+import { StatusBar } from "expo-status-bar";
 
 const Page = () => {
 
@@ -45,6 +46,7 @@ const Page = () => {
 
   return (
     <View style={styles.container}>
+      <StatusBar style="dark" />
       <Text>Welcome Page</Text>
       <TouchableOpacity onPress={checkSignInStatus}>
         <Text>Get Strated</Text>

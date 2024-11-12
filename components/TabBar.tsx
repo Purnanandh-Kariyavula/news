@@ -29,7 +29,7 @@ export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
     <View onLayout={onTabbarLayout} style={styles.tabbar}>
       <Animated.View style={[animatedStyle, {
         position: 'absolute',
-        backgroundColor: Colors.tint,
+        backgroundColor: Colors.blue,
         top: 52,
         left: 34,
         height: 8,
