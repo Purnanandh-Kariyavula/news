@@ -85,9 +85,8 @@ const NewsDetails = (props: Props) => {
           headerShown: false,
         }}
       />
-      <SafeAreaView>
-        
-        <StatusBar style="dark" />
+      <StatusBar style="dark" />
+      <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.header}>
           <Text style={styles.ntitle}>Read News</Text>
         </View>
@@ -96,7 +95,7 @@ const NewsDetails = (props: Props) => {
           <View style={styles.contentContainer}>
             <Text style={styles.title}>{news.title}</Text>
             <Text style={styles.description}>{news.description}</Text>
-
+  
             <View style={styles.metaContainer}>
               <Text style={styles.metaText}>Source: {news.source_name}</Text>
               <Text style={styles.metaText}>
@@ -119,17 +118,31 @@ const NewsDetails = (props: Props) => {
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   onPress={() => {
-                    bookmarkNews ? removeBookmark(news.article_id) : saveBookmark(news.article_id);
+                    bookmarkNews
+                      ? removeBookmark(news.article_id)
+                      : saveBookmark(news.article_id);
                   }}
                   style={[styles.iconButton, styles.bookmarkButton]}
                 >
-                  <Ionicons name={bookmarkNews ? "bookmark" : "bookmark-outline"} size={24} color={bookmarkNews ? Colors.tint : Colors.blue} />
+                  <Ionicons
+                    name={bookmarkNews ? "bookmark" : "bookmark-outline"}
+                    size={24}
+                    color={bookmarkNews ? Colors.tint : Colors.blue}
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => bookmarkNews ? removeBookmark(news.article_id) : saveBookmark(news.article_id)}
+                  onPress={() =>
+                    bookmarkNews
+                      ? removeBookmark(news.article_id)
+                      : saveBookmark(news.article_id)
+                  }
                   style={[styles.iconButton, styles.likeButton]}
                 >
-                  <Ionicons name={bookmarkNews ? "heart" : "heart-outline"} size={24} color={bookmarkNews ? Colors.tint : Colors.blue} />
+                  <Ionicons
+                    name={bookmarkNews ? "heart" : "heart-outline"}
+                    size={24}
+                    color={bookmarkNews ? Colors.tint : Colors.blue}
+                  />
                 </TouchableOpacity>
               </View>
             </Text>
@@ -138,6 +151,7 @@ const NewsDetails = (props: Props) => {
       </SafeAreaView>
     </>
   );
+  
 };
 
 export default NewsDetails;
