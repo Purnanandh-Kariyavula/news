@@ -41,7 +41,7 @@ const Page = () => {
           style={styles.image}
         />
         <Text style={styles.title}>
-          Invest in your personal growth{" "}
+          Read News like a Pro{"\n"}
           <Text style={styles.highlight}>on the go</Text>
         </Text>
         <Text style={styles.subtitle}>

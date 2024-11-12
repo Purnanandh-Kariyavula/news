@@ -1,12 +1,6 @@
-import { Pressable, StyleSheet } from "react-native";
-import React, { useEffect } from "react";
+import { Pressable, StyleSheet, Text } from "react-native";
+import React from "react";
 import { icon } from "@/constants/Icons";
-import Animated, {
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from "react-native-reanimated";
 import { Colors } from "@/constants/Colors";
 
 const TabBarButton = ({
@@ -16,50 +10,32 @@ const TabBarButton = ({
   routeName,
   label,
 }: {
-  onPress: Function;
-  onLongPress: Function;
+  onPress: () => void;
+  onLongPress: () => void;
   isFocused: boolean;
   routeName: string;
   label: string;
 }) => {
-  const opacity = useSharedValue(0);
-
-  useEffect(() => {
-    opacity.value = withSpring(
-      typeof isFocused === "boolean" ? (isFocused ? 1 : 0) : isFocused,
-      { duration: 50 }
-    );
-  }, [opacity, isFocused]);
-
-  const animatedTextStyle = useAnimatedStyle(() => {
-    const opacityValue = interpolate(opacity.value, [0, 1], [1, 0]);
-
-    return {
-      opacity: opacityValue,
-    };
-  });
-
   return (
     <Pressable
       onPress={onPress}
       onLongPress={onLongPress}
       style={styles.tabbarBtn}
     >
+      {/* Apply blue color to icon when focused */}
       {icon[routeName]({
         color: isFocused ? Colors.blue : Colors.tabIconDefault,
+        fill: isFocused ? Colors.blue : Colors.tabIconDefault,
         focused: isFocused,
       })}
-      <Animated.Text
+      <Text
         style={[
-          {
-            color: isFocused ? Colors.blue : Colors.tabIconDefault,
-            fontSize: 12,
-          },
-          animatedTextStyle,
+          styles.tabLabel,
+          { color: isFocused ? Colors.blue : Colors.tabIconDefault },
         ]}
       >
         {label}
-      </Animated.Text>
+      </Text>
     </Pressable>
   );
 };
@@ -72,5 +48,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 5,
+  },
+  tabLabel: {
+    fontSize: 12,
   },
 });
