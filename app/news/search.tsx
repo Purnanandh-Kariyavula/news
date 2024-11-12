@@ -44,7 +44,6 @@ const search = () => {
       let cat = category ? category : "top";
       let co = country ? country : "in";
       const URL = `https://newsdata.io/api/1/news?apikey=${process.env.EXPO_PUBLIC_NEWS_API}&country=${co}&category=${cat}&q=${q}&language=en&image=1&removeduplicate=1&size=10`;
-      console.log(URL);
       const response = await axios.get(URL);
       setNews(response.data.results);
       setisLoading(false);
