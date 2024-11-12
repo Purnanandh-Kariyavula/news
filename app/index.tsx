@@ -9,7 +9,7 @@ const Page = () => {
   const client = new Client().setProject("67322c5c002c10ce2e0e");
   const account = new Account(client);
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -22,7 +22,38 @@ const Page = () => {
     };
     checkAuthStatus();
   }, []);
+  useEffect(() => {
+    if (isAuthenticated === true) {
+      router.replace("/(tabs)");
+    }
+  }, [isAuthenticated]);
 
+  const handlePress = () => {
+    router.replace("/(starter)");
+  };
+
+  if(!isAuthenticated && isAuthenticated != null){
+    return (
+      <View style={styles.container}>
+        <StatusBar style="dark" />
+        <Image
+          source={require("../assets/images/landing-icon.png")}
+          style={styles.image}
+        />
+        <Text style={styles.title}>
+          Invest in your personal growth{" "}
+          <Text style={styles.highlight}>on the go</Text>
+        </Text>
+        <Text style={styles.subtitle}>
+          Get the knowledge and insight you need to be a better you—anytime,
+          anywhere.
+        </Text>
+        <TouchableOpacity style={styles.button} onPress={handlePress}>
+          <Text style={styles.buttonText}>Get Started</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
   const handlePress = () => {
     router.replace(isAuthenticated ? "/(tabs)" : "/(starter)");
   };
@@ -57,6 +88,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f0f4f8",
+    padding: 16,
     paddingHorizontal:20
   },
   image: {
