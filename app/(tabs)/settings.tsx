@@ -1,20 +1,26 @@
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Stack } from 'expo-router'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Colors } from '@/constants/Colors'
-import { Account, Client } from 'appwrite';
+import { Account, Client, Query } from 'appwrite';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar'
+import { Databases } from 'react-native-appwrite'
 
-type Props = {}
-
-const Page = (props: Props) => {
+const Page = () => {
   const { top: safeTop } = useSafeAreaInsets();
   const client = new Client().setProject('67322c5c002c10ce2e0e');
   const account = new Account(client);
+  const DatabaseId= '67361fcc001c83196a2c';
+  const CollectionId ='67361fd7002a76aa2a69';
+  const databases = new Databases(client);
   const router = useRouter();
+
+  // State to hold user details
+  const [userName, setUserName] = useState('');
+  const [userMail, setUserMail] = useState('');
 
   const handleSignOut = async () => {
     try {
@@ -25,6 +31,33 @@ const Page = (props: Props) => {
       console.error('Error signing out:', error);
     }
   };
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+        try {
+            const userSession = await account.get();
+            const userId = userSession.$id;
+            const result = await databases.listDocuments(
+              DatabaseId,
+              CollectionId,
+              [
+                Query.equal('userId', userId)
+              ]
+            );
+            if (result.documents.length > 0) {
+              const userDocument = result.documents[0];   
+              setUserName(userDocument.name); // Update state
+              setUserMail(userDocument.user_mail); // Update state
+              console.log("userName: ", userDocument.name);
+              console.log("Mail ID: ", userDocument.user_mail);
+          }
+        } catch (error) {
+            console.error('Error fetching user details:', error);
+        }
+    };
+
+    fetchUserDetails();
+}, []);
 
   return (
     <>
@@ -42,8 +75,8 @@ const Page = (props: Props) => {
               <MaterialIcons name='edit' size={20} color={Colors.white} />
             </TouchableOpacity>
           </View>
-          <Text style={styles.profileName}>Kariyavula Purnanandh</Text>
-          <Text style={styles.profilePhone}>+91 9347757722</Text>
+          <Text style={styles.profileName}>{userName || 'Loading...'}</Text>
+          <Text style={styles.profilePhone}>{userMail || 'Loading...'}</Text>
         </View>
 
         {/* Settings Options */}

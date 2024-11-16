@@ -4,9 +4,12 @@ import { Client, Account, ID } from 'appwrite';
 import { useRouter } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 import { StatusBar } from 'expo-status-bar';
+import { Databases } from 'react-native-appwrite';
 
-const client = new Client().setProject('67322c5c002c10ce2e0e');
+const client = new Client()
+  .setProject('67322c5c002c10ce2e0e');
 const account = new Account(client);
+const databases = new Databases(client);
 
 const Register: React.FC = () => {
     const [name, setName] = useState('');
@@ -14,11 +17,15 @@ const Register: React.FC = () => {
     const [password, setPassword] = useState('');
     const [focusedInput, setFocusedInput] = useState('');
     const router = useRouter();
+    const DatabaseId= '67361fcc001c83196a2c';
+    const CollectionId ='67361fd7002a76aa2a69';
 
     const handleRegister = async () => {
         try {
             const response = await account.create(ID.unique(), email, password, name);
+            const userId = response.$id;
             alert('Registration successful!');
+            await storeUserDetails(userId);
             router.replace("/(tabs)");
             console.log(response);
         } catch (error) {
@@ -26,6 +33,27 @@ const Register: React.FC = () => {
             console.error(error);
         }
     };
+
+    const storeUserDetails = async (userId: string) => {
+        try {
+            const userData = {
+                name: name,
+                user_mail: email,
+                userId:userId,
+            };
+            await databases.createDocument(
+                DatabaseId,    
+                CollectionId,    
+                ID.unique(),              
+                userData,  
+                ["role:guests"]               
+            );
+    
+            console.log('User details stored successfully!');
+        } catch (error) {
+            console.log('Error storing user details:', error.message);
+        }
+      };
 
     const navigateToLogin = () => {
         router.replace('/(starter)');
